@@ -33,7 +33,7 @@ body {
 ​	auto是 <span style="color: red"> **非包裹性的块级元素** </span> 在<span style="color: red"> **宽度** </span> 相对父元素的默认值 *（块级元素的margin、border、padding以及content宽度之和等于父元素width）*，由浏览器自动计算。
 
   		1.  自适应屏幕宽度 width: auto;	
-  		2.  相对父元素水平居中 margin: 0 auto;	
+    		2.  相对父元素水平居中 margin: 0 auto;	
 
 
 

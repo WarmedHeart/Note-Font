@@ -193,7 +193,7 @@ ECMAScript  是 JavaScript 标准的规范。
 
 2. ECMAScript只支持晚绑定（late binding）指的是编译器或解释程序在运行前，不知道对象的类型。使用晚绑定，无需检查对象的类型，只需检查对象是否支持属性和方法即可。ECMAScript 中的所有变量都采用晚绑定方法。这样就允许执行大量的对象操作，而无任何惩罚。
 
-3. ECMAScript只有公用作用域（没有私有），开发者统一规约在属性前后加下划线：
+3. ECMAScript只有公用作用域（没有私有），开发者统一规约在私有属性前后加下划线：
 
    ```javascript
    obj._color_ = "blue";
@@ -437,5 +437,243 @@ function addWarp() {
 }
 var incTemp = addWarp();
 incTemp();
+```
+
+### （五）事件代理和委托
+
+> 原理：JS事件冒泡
+>
+> 描述：div > ul > li > a都绑定了click()事件，当点击a标签会从内向外触发事件：执行顺序a> li > ul > div。
+
+冒泡案例：当点击li区域打印：1 ul div / 2 ul div / 3 ul div / 4 ul div ；点击ul区域打印：ul div
+
+```html
+<div onclick="console.log('div')">
+    <ul onclick="console.log('ul')">
+        <li onclick="console.log(1)">1</li>
+        <li onclick="console.log(2)">2</li>
+        <li onclick="console.log(3)">3</li>
+        <li onclick="console.log(4)">4</li>
+    </ul>
+</div>
+```
+
+事件代理案例一：
+
+```html
+<div id="box">
+    <input type="button" id="add" value="添加" />
+    <input type="button" id="remove" value="删除" />
+    <input type="button" id="move" value="移动" />
+    <input type="button" id="select" value="选择" />
+</div>
+
+// 简单绑定：dom操作次数（四个按钮进行了四次dom操作）
+<script>
+    window.onload = function(){
+        var Add = document.getElementById("add");
+        var Remove = document.getElementById("remove");
+        var Move = document.getElementById("move");
+        var Select = document.getElementById("select");
+
+        Add.onclick = function(){
+       	 	alert('添加');
+        };
+        Remove.onclick = function(){
+        	alert('删除');
+        };
+        Move.onclick = function(){
+        	alert('移动');
+        };
+        Select.onclick = function(){
+        	alert('选择');
+        }
+    }
+</script>
+
+// 优化：dom操作次数（只进行了一次dom操作）;
+// 只简单冒泡当点击外层div时也会触发事件，如何跟直接在指定元素(input)绑定元素效果一样呢？
+// Event对象提供了一个属性叫target，可以返回事件的目标节点，我们称为事件源。也就是说，target就可以表示为当前的事件操作的dom，但是不是真正操作dom，当然，这个是有兼容性的，标准浏览器用ev.target，IE浏览器用event.srcElement，此时只是获取了当前节点的位置，并不知道是什么节点名称，这里我们用nodeName来获取具体是什么标签名，这个返回的是一个大写的，我们需要转成小写再做比较（习惯问题）。
+
+<script>
+    window.onload = function(){
+        var oBox = document.getElementById("box");
+        oBox.onclick = function(ev) {
+        	var ev = ev || window.event;
+        	var target = ev.target || ev.srcElement;
+        	if(target.nodeName.toLocaleLowerCase() == 'input'){
+                switch(target.id){
+                    case 'add' :
+                        alert('添加');
+                        break;
+                    case 'remove' :
+                        alert('删除');
+                        break;
+                    case 'move' :
+                        alert('移动');
+                        break;
+                    case 'select' :
+                        alert('选择');
+                        break;
+                }
+            }
+        }
+    }
+</script>
+```
+
+**适合用事件委托的事件：click，mousedown，mouseup，keydown，keyup，keypress。**
+
+**focus，blur之类的，本身就没用冒泡的特性。**
+
+### （六）Error错误/Exception异常处理
+
+1. 错误Error：编译时错误，必须修正错误后才能运行。
+
+2. 异常Exception：运行时异常，包括：
+
+- Error ‰；是基本的错误类型，其他类型都继承自这个类型。
+- EvalError；在使用 eval()函数而发生异常时被抛出
+- RangeError ‰
+- ReferenceError ‰
+- SyntaxError ‰
+- TypeError ‰；经常用到，在变量中保存着意外的类型时，或者在访问不存在的 方法时，都会导致这种错误
+- URIError
+
+3. 错误信息属性
+   - description: 错误描述 (仅IE可用).
+   - fileName: 出错的文件名 (仅Mozilla可用).
+   - lineNumber: 出错的行数 (仅Mozilla可用).
+   - message: 错误信息 (在IE下同description)
+   - name: 错误类型.
+   - number: 错误代码 (仅IE可用).
+   - stack: 像Java中的Stack Trace一样的错误堆栈信息 (仅Mozilla可用).
+
+4. 异常处理机制 ： 可以保证代码在执行过程中出现异常，不停止整个应用。
+
+   4.1 try-catch-finally
+
+   4.2 throw
+
+   4.3 自定义异常
+
+```javascript
+function myException(message) {
+	this.message = message;
+	if(typeOf myException._initialized_ == 'undefined') {
+		myException.prototype = new Error();
+	}
+	myException._initialized_ = true;
+}
+```
+
+### （七）[同步任务、异步任务](https://www.jianshu.com/p/0ddd86a145ef)
+
+**同步任务**：会进入主线程，按照代码顺序执行。
+
+**异步任务**：不会进入主线程，而是进入“任务队列”，只有任务队列通知主线程，某个异步任务可以执行了，该任务才会进入主线程。像文件的读取和ajax请求等耗时操作。
+
+> 1. 宏观任务队列：setTimeout, setInterval等。
+>
+>  	2. 微观任务队列：promise, process.nextTick(当读取到第一个nextTick，就会一次性从队列中执行全部nextTick)
+>
+
+**事件循环**：主线程从任务队列中读取事件，这个过程是循环不断的。
+
+### （八）JSON
+
+一种轻量级的数据交换格式，主要用于存储和传输数据的格式
+
+```javascript
+var str = '{ "sites" : "yy" }';
+var obj = JSON.parse(str);	//将json字符串转成js对象
+var strr = JSON.stringify(obj);	//将js字符串转成json对象
+```
+
+### （九）[异步方式](https://www.jianshu.com/p/8bc48f8fde75)
+
+1. 原生ajax：不适用于异步顺序执行。**底层使用XMLHttpRequest对象**
+
+   ```javascript
+   $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      dataType: dataType,
+      success: function () {},
+      error: function () {}
+   });
+   ```
+
+2. ajax集合promise实现异步顺序执行。
+
+   > `**Promise**` 对象是一个代理对象（代理一个值），被代理的值在Promise对象创建时可能是未知的。它允许你为异步操作的成功和失败分别绑定相应的处理方法（handlers）。
+
+   ```javascript
+   // 1 .把 ajax 返回成功 / 失败的回调封装成一个 Promise 对象（同时判断 resolve / reject 状态）
+   // 2 .其对象根据传来的状态 resolve 则执行.then( res => {} // 实际在Promise.prototype上 )来执行ajax一层返回成功后的二层 ajax 请求，状态为 reject 的则执行对象的.catch( err => {} // 实际在Promise.prototype上 )，以此类推，实现异步请求的顺序执行
+                                  
+   const ajaxPromise = obj => {
+           return new Promise((resolve, reject) => {
+               $.ajax({
+                   type: obj.type,
+                   url: obj.url,
+                   data: obj.data,
+                   success: res => {
+                       resolve(res);      // 请求成功则转成Promise对象并判断为resolve状态
+                   },
+                   error: err => {
+                       reject(err.status);      // 请求失败则转成Promise对象并判断为reject状态
+                   }
+               })
+           })
+       } 
+   
+       /*
+           函数1：判断用户登陆成功
+        */
+       let userLogin = () => {
+           // 第一次执行ajaxPromise
+           ajaxPromise({
+               type: 'get',
+               url: 'test.php',
+               data: { userName: 'Verin', userPwd: '123456'}
+           }).then(res => {
+               console.log('后台校验提交的数据并返回成功信息');        // 成功则二次ajax请求，取用户信息
+               getUserInfo(res);
+           }).catch(err => {
+               console.log('用户校验提交的数据失败，无法登陆');
+           })
+       }
+   
+   ```
+
+3. axios：基于promise对原生XMLHttpRequest的封装。（主流）
+
+   ```javascript
+   axios({
+       method: 'post',
+       url: '/user/12345',
+       data: {
+           firstName: 'Fred',
+           lastName: 'Flintstone'
+       }
+   })
+   .then(function (response) {
+       console.log(response);
+   })
+   .catch(function (error) {
+       console.log(error);
+   });
+   ```
+
+4. fetch：：对promise封装，**没有使用XMLHttpRequest对象**
+
+### （十）正则表达式
+
+```
+var patt =  /^\d+$/;	//判断是否全部为数字
+var val = "123456";
+console.log(patt.test(val));
 ```
 

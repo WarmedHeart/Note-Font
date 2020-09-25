@@ -3,7 +3,7 @@
 ##### 		1.1 全局安装目录查看：
 
 ```
-		npm config list
+npm config list
 ```
 
 > 我是修改后的，系统默认的都是在C:\Users\Administrator\AppData\Roaming\npm

@@ -33,7 +33,7 @@ body {
 ​	auto是 <span style="color: red"> **非包裹性的块级元素** </span> 在<span style="color: red"> **宽度** </span> 相对父元素的默认值 *（块级元素的margin、border、padding以及content宽度之和等于父元素width）*，由浏览器自动计算。
 
   		1.  自适应屏幕宽度 width: auto;	
-    		2.  相对父元素水平居中 margin: 0 auto;	
+                		2.  相对父元素水平居中 margin: 0 auto;	
 
 
 
@@ -145,18 +145,22 @@ body {
 
 
 
-        <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); float:left"></div>
-        <div style="width:200px; height: 200px; background-color: blue;">
-            最近还好1！最近还好2！最近还好3！最近还好4！
-            最近还好5！最近还好6！最近还好7！最近还好8！
-        </div>
+```html
+    <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); float:left"></div>
+    <div style="width:200px; height: 200px; background-color: blue;">
+        最近还好1！最近还好2！最近还好3！最近还好4！
+        最近还好5！最近还好6！最近还好7！最近还好8！
+    </div>
+```
 以下是absoult，不会影响其他元素任何布局。
 
-        <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); position:absolute"></div>
-        <div style="width:200px; height: 200px; background-color: blue;">
-            最近还好1！最近还好2！最近还好3！最近还好4！
-            最近还好5！最近还好6！最近还好7！最近还好8！
-        </div>	
+```html
+    <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); position:absolute"></div>
+    <div style="width:200px; height: 200px; background-color: blue;">
+        最近还好1！最近还好2！最近还好3！最近还好4！
+        最近还好5！最近还好6！最近还好7！最近还好8！
+    </div>	
+```
 
 **使用float实现圣杯布局、双飞翼布局：两者都是先加载中间部分，额外引入<div>标签，其目的是为了既能使中间产生浮动，又能使中间自适应屏幕宽度（浮动后属于包裹元素，不能width:auto自适应宽度），为两侧预留空间。**
 

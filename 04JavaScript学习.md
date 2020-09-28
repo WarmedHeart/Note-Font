@@ -289,7 +289,18 @@ ECMAScript  是 JavaScript 标准的规范。
 
 ### （八）ES6（未看）
 
+- let、const代替var
 
+- 变量结构：返回多个值、解析json
+
+- ```
+  // 遍历map
+  for (let [key, value] of map) {
+    console.log(key + " is " + value);
+  }
+  ```
+
+- 箭头函数：内部没有this会向外层找
 
 ## 二、DOM编程
 

@@ -302,6 +302,35 @@ ECMAScript  是 JavaScript 标准的规范。
 
 - 箭头函数：内部没有this会向外层找
 
+- 对象增强
+
+  ```javascript
+  const name = "hang";
+  const age = 18;
+  const obj = {
+  	//es5
+  	//name: name,
+  	//age: age,
+      
+  	//es6增强
+  	name,
+  	age
+  }
+  ```
+
+- 函数增强
+
+  ```javascript
+  const obj = {
+  	//es5
+  	//run: function() {},
+  	//es6
+  	run()
+  }
+  ```
+
+  
+
 ## 二、DOM编程
 
 document object model文档对象模型，通过JS操作document进而动态修改html元素。

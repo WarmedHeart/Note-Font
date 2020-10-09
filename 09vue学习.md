@@ -590,4 +590,13 @@ new Vue({
 
 快速搭建vue开发环境以及对应的webpack配置
 
+```
+//vuecli3版本 @1(只是用脚手架3)
 npm install -g @vue/cli
+vue create my-project
+
+//在脚手架3的基础上使用vuecli2版本 @2(先安装脚手架3，在安装脚手架2，两个都可以使用)
+npm install -g @vue/cli-init
+vue init webpack my-project
+```
+

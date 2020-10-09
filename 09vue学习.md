@@ -24,7 +24,7 @@
   ```
 
   ```javascript
-  const app = new Vue({
+  new Vue({
       el: "#app",
       methods: {
           clickBtn(name, event){
@@ -83,7 +83,7 @@
   ```
 
   ```javascript
-  const app=new Vue({
+  new Vue({
   	el: '#app',
   	data: {
   		sex: '男',
@@ -161,7 +161,7 @@
 ```
 
 ```javascript
-const app = new Vue({
+new Vue({
 	el: "#app",
 	data: {
 		score: 90
@@ -196,7 +196,7 @@ v-for遍历数组，可添加唯一key提高性能，不要使用index作为key
 
 - 组件：
 
-  ```
+  ```javascript
   // 模板命名和使用时命名都是用 kebab-case （短横线分隔命名）
   Vue.component('my-component-name', { /* ... */ })
   
@@ -205,7 +205,7 @@ v-for遍历数组，可添加唯一key提高性能，不要使用index作为key
 
 - prop参数
 
-  ```
+  ```javascript
   Vue.component('blog-post', {
     props: ['postTitle'],	//模板中camelCase（驼峰命名）
   })
@@ -215,7 +215,7 @@ v-for遍历数组，可添加唯一key提高性能，不要使用index作为key
 
 - 自定义事件
 
-  ```
+  ```javascript
   始终使用 kebab-case 的事件名
   Vue.component('blog-post', {
       <button v-on:click="$emit('enlarge-text')">
@@ -244,7 +244,7 @@ v-for遍历数组，可添加唯一key提高性能，不要使用index作为key
     		</div>
 		`});	 
     
-    const app = new Vue({
+    new Vue({
         el:'#app',
         components: {
             my-component: myComponent	<-- 2.局部注册组件-->
@@ -326,7 +326,7 @@ var componentB = {
 </div>
 
 <script>
-	var app = new Vue({
+	new Vue({
         el: '#app',
         data: {
             post: {
@@ -368,7 +368,7 @@ var com = {
 </div>
 
 <script>
-	var app = new Vue({
+	new Vue({
 		el: "#app",
 		data: {
 			ftitle: ""
@@ -395,6 +395,7 @@ var com = {
 ```
 
 ```html
+
 <template id="cpn">
 	<div>
         <slot name="left">默认值：左边</slot>
@@ -515,16 +516,16 @@ var com = {
 
 ### webpack环境集成Vue.js
 
-```
+```shell
 npm install --save vue	//安装vue
 ```
 
-```
-inport Vue from ‘vue’	//导入vue使用new Vue()挂载模块
+```javascript
+import Vue from ‘vue’	//导入vue使用new Vue()挂载模块
 ```
 
-```
-//webpack.config.js
+```javascript
+//webpack.config.js 指定版本vue为runtime-complier进行编译template
 resolve: {
 	alias: {
 		'vue$': 'vue/dist/vue.esm.js'
@@ -532,3 +533,61 @@ resolve: {
 }
 ```
 
+### el和template同时存在
+
+template内容会替换父模板<div id="app"></div>
+
+```javascript
+import Vue from 'vue'
+
+new Vue({
+    el: '#app',
+    template: `
+        <div>
+            nihao~
+        </div>
+    `
+})
+```
+
+### Vue开发时使用模板
+
+```javascript
+//App.vue
+<template>
+	<div> </div>
+</template>
+
+<script>
+	export default {
+		name: "App",
+		data() {
+			return　{
+			
+			}
+		}，
+		methods() {}
+	}
+</script>
+
+<style scoped>
+</style>
+```
+
+```javascript
+import Vue from 'vue'
+import App from './vue/App.vue'
+new Vue({
+	el: '#app',
+	template: '<APP/>',
+	components: {
+		APP
+	}
+})
+```
+
+### Vue cli脚手架的使用
+
+快速搭建vue开发环境以及对应的webpack配置
+
+npm install -g @vue/cli

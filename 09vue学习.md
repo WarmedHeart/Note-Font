@@ -395,9 +395,6 @@ var com = {
 ```
 
 ```html
-
-
-
 <template id="cpn">
 	<div>
         <slot name="left">默认值：左边</slot>
@@ -513,7 +510,7 @@ var com = {
    [官网](https://cn.vuejs.org/v2/guide/conditional.html)：中input复用实例。通过key来避免复用。
 
 2. v-for遍历时，建议添加上key属性。当遍历数组在页面渲染成功后，向数组中间插入元素。
-   1. 没有添加key属性：Vue的虚拟DOM的Diff算法，会依次修改插入元素后面的值，相当于向后移动一位。
+   1. 没有添加key属性：Vue的虚拟DOM的Diff算法，会依次修改插入元素所处位置后面的值，相当于向后移动一位。
    2. 添加key属性：为每个渲染的节点做唯一标识，找到正确的位置插入新的节点。key 对应的dom没有发生变化就不会修改虚拟dom，所以**不要使用index作为key**，当向中间插入后，插入位置后面所有元素对应的key都会变动，导致虚拟dom会重新渲染，与没有添加key属性新能一样。
 
 ### webpack环境集成Vue.js

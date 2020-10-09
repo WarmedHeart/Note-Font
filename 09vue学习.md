@@ -590,7 +590,7 @@ new Vue({
 
 快速搭建vue开发环境以及对应的webpack配置
 
-```
+```shell
 //vuecli3版本 @1(只是用脚手架3)
 npm install -g @vue/cli
 vue create my-project
@@ -600,3 +600,6 @@ npm install -g @vue/cli-init
 vue init webpack my-project
 ```
 
+### 路由
+
+SPA：单页面富应用

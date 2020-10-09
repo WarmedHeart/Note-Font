@@ -300,7 +300,45 @@ ECMAScript  是 JavaScript 标准的规范。
   }
   ```
 
-- 箭头函数：内部没有this会向外层找
+- 箭头函数(一般当参数为函数时使用)：内部没有this会向外层找
+
+  > setTimeout(function() {console.log(this);})
+  >
+  > 内部函数调用时用的call()，会把window作为第一个参数传进去。
+
+  ```javascript
+  const obj = {
+  	test() {
+          //@1
+  		setTimeout(function() {
+  			console.log(this);	//window
+  		})
+          setTimeout(()=> {
+              console.log(this);	//obj
+          })
+          //@2
+          setTimeout(function() {
+          	setTimeout(function() {
+          		console.log(this);	//window
+         		})
+              setTimeout(() => {
+          		console.log(this);	//window
+         		})
+          })
+          //@3
+          setTimeout(() => {
+          	setTimeout(function() {
+          		console.log(this);	//window
+         		})
+              setTimeout(()=> {
+          		console.log(this);	//obj
+         		})
+          })
+  	}
+  }
+  ```
+
+  
 
 - 对象增强
 

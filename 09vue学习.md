@@ -609,3 +609,114 @@ vue init webpack my-project
 静态资源服务器：最终将全部文件打包成一个html、一个js、一个css。
 
 客户端请求资源，服务器将html + css + js（全部资源）作为响应，客户端不会全部加载显示，当更改请求链接时浏览器只是根据前端路由规则显示不同页面。
+
+
+
+SPA：单页面富应用
+
+不请求服务器的方式：
+
+1.  锚（hash值）：/#/home
+
+    ```
+    location.hash = 'home'
+    ```
+
+2.  BOM修改 history.pushState()：/home
+
+    ```
+    //类似栈形式
+    history.pushState({},'','home')	//localhost:8080/home
+    history.pushState({},'','about')//localhost:8080/about
+    
+    history.back()	//localhost:8080/home#
+    history.forward()
+    history.go(-1)	//等同于back()
+    history.go(1)	//等同于forward()
+    ```
+
+3.  BOM修改 history.replaceState()：/home
+
+    ```
+    //该方式没有历史纪录，不能使用history.back()
+    history.replaceState({},'','home')
+    ```
+
+vue-router的单页面应用，页面的路径改变就是组件的切换。
+
+1.  引入vue-router
+
+```
+npm install vue-router --save
+```
+
+2.  配置路由相关信息
+
+    router/index.js
+
+```
+// 
+import VueRouter from 'vue-router'
+import Vue from 'vue'
+
+// import Home from '../componetns/Home'
+//懒加载组件，最终打包成多个js,客户端路由到哪个就访问哪个js，不向之前全部组件打包成一个js，大型项目最终会很大。
+const Home = () => import('../components/Home')
+const HomeNews = () => import('../components/HomeNews')
+//1 通过Vue.use(插件)，安装插件
+Vue.use(VueRouter)
+
+//2 创建VueRouter对象
+const routes = [
+	//访根目录默认重定向
+	{
+		path: '',
+		redirect: '/home'
+	}，
+	{
+		path: '/home',
+		component: Home,
+		//子路由
+		children: [
+			{
+				path: 'news',
+				component: HomeNews,
+			}
+		]
+	}
+]
+const router = new VueRouter({
+	//配置路由和组件之间的映射关系
+	routes,
+	mode: 'history'	//防止浏览器显示的hash，即带有#
+})
+
+//3 将router对象传入到vue实例
+export default router
+```
+
+​			main.js
+
+```
+//
+import Vue from 'vue'
+import App from './App'
+import router from './router/index'
+
+new Vue({
+	el: '#app',
+	router: router,
+	render: h >= h(App)
+})
+```
+
+​		App.vue
+
+```vue
+<template>
+	<div id="app">
+        <router-link to='/home'>首页</router-link>	/最终渲染成a标签
+       <router-view></router-view>
+    </div>    
+</tempalte>
+```

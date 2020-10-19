@@ -602,6 +602,8 @@ vue init webpack my-project
 
 ### 路由
 
+#### 一、web开发历程
+
 1. 后端渲染jsp、php
 2. 前后端分离：不同链接对应不同html+css+js
 3. SPA：单页面富应用，整个网页只有一个html页面  。
@@ -612,7 +614,7 @@ vue init webpack my-project
 
 
 
-SPA：单页面富应用
+#### 二、SPA：单页面富应用
 
 不请求服务器的方式：
 
@@ -642,7 +644,7 @@ SPA：单页面富应用
     history.replaceState({},'','home')
     ```
 
-vue-router的单页面应用，页面的路径改变就是组件的切换。
+#### 三、vue-router的单页面应用，页面的路径改变就是组件的切换。
 
 1.  引入vue-router
 
@@ -698,11 +700,6 @@ export default router
 ​			main.js
 
 ```
-//
-import Vue from 'vue'
-import App from './App'
-import router from './router/index'
-
 new Vue({
 	el: '#app',
 	router: router,
@@ -720,3 +717,10 @@ new Vue({
     </div>    
 </tempalte>
 ```
+
+#### 四、vue-router内部属性
+
+​	所有组件都继承vue原型：vue.prototype.$router以及vue.prototype.$route都是在原型类中。
+
+1. this.$router：即index.js中创建的router属性，在所有组件data()内部默认都存在，**push()、replace()**效果相当于~~hsitory.pushState()、history.replaceState()~~，history的方法会绕过vue-router。beforeEach()进行跳转拦截
+2. this.$route：处于活跃路由的组件。.params、.query获取访问该组件时传入的参数。

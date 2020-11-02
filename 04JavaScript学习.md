@@ -755,3 +755,57 @@ var val = "123456";
 console.log(patt.test(val));
 ```
 
+# 二、前端模块化
+
+### （一）CommonJS:
+
+同步加载模块，需要使用打包工具将CommonJS特有语法打包（exports、require等），使用browserify进行打包。运行时才能确定模块间依赖关系、输入、输出变量。	
+
+```javascript
+	model.exports = {};  
+	require("");
+```
+
+### （二）AMD：
+
+非同步加载模块，可以使用回调函数。需将导出模块进行统一，较为繁琐。运行时才能确定模块间依赖关系、输入、输出变量。
+
+```javascript
+	define(['module1', 'module2'], function(m1, m2){
+	   return 模块
+	})
+	require(['module1', 'module2'], function(m1, m2){
+		//加载完成执行该函数
+	   使用m1/m2
+	})
+```
+
+
+
+### （三）CMD：
+
+可同步、可异步
+
+```javascript
+	model.exports = {};  
+	require('./module2') /  require.async('./module3', function (m3) {
+								console.log('异步引入依赖模块3  ' + m3.API_KEY)
+							})
+```
+
+
+
+### （四）ES6：
+
+模块静态化，编译时确定模块间依赖关系，以及输入输出的变量。
+
+```
+	export 关键字，导出的是非对象形式，不是es6对象中key value简写形式，相当于标签，import判断有没有这个标签，没有会报错。
+	import 关键字
+	import() 函数，返回Promise对象，实现异步加载。
+```
+
+CommonJS 和ES6区别：
+
+CommonJS ：输出值的拷贝、模块运行时加载
+ES6：输出值的引用、模块是编译时输出

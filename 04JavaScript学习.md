@@ -293,13 +293,16 @@ ECMAScript  是 JavaScript 标准的规范。
 
 - 变量结构：返回多个值、解析json
 
-- ```
+- ```javascript
+  //初始化对象
+  let map = new Map([["age", 18], ["address", "河北省"]]);	//参数需要一个二维数组
+  map.set("name", "hang")
   // 遍历map
   for (let [key, value] of map) {
-    console.log(key + " is " + value);
+  console.log(key + " is " + value);
   }
   ```
-
+  
 - 箭头函数(一般当参数为函数时使用)：内部没有this会向外层找
 
   > setTimeout(function() {console.log(this);})
@@ -354,6 +357,10 @@ ECMAScript  是 JavaScript 标准的规范。
   	name,
   	age
   }
+  //遍历对象
+  for(var i in obj) {
+      console.log(i, ":", obj[i]);
+  }
   ```
 
 - 函数增强
@@ -363,7 +370,7 @@ ECMAScript  是 JavaScript 标准的规范。
   	//es5
   	//run: function() {},
   	//es6
-  	run()
+  	run(){}
   }
   ```
 

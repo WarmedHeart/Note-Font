@@ -1,5 +1,7 @@
 前端规范：缩进2个空格
 
+MVVM：model + model view + view实现的双向数据绑定；主要依靠View model中Dom Listeners对view的监听，Directives对model中数据改变进而修改dom；模块化
+
 ### 指令
 
 - **v-once**	不会随着变量值变化而变化
@@ -281,7 +283,7 @@ v-for遍历数组，可添加唯一key提高性能，不要使用index作为key
 var componentB = {
     //组件内data声明成函数，防止多个地方使用该组件，变量互相影响。es6增强函数：data(){return {name:"hang"}}
     data: function() {
-            return {name: 'hang', dtitle=this.title, dmyValue=this.myValue}	//将接受到的peops转成data中数据
+            return {name: 'hang', dtitle=this.title, dmyValue=this.myValue}	//将接受到的props转成data中数据
         },
     
     //props中变量接受由父级组件传入的值，v-bind默认为单向数据流：父级的变化会改变子组件

@@ -77,6 +77,10 @@ list.every((val, idx, array) => {
     return true; // Continues
     // Return false will quit the iteration
 });
+// 6.find返回第一个符合条件元素
+let list = [1, 2, 3, 4];
+console.log(arr.find(item => item > 2)); // 3
+
 ```
 
 接口、类、访问控制修饰符、对象

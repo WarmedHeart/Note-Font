@@ -22,14 +22,15 @@ ECMAScript  是 JavaScript 标准的规范。
 
 **引用数据类型**：对象(Object)、数组(Array)、函数(Function)
 
-
-
 1. 检查变量或值的类型：
 
    ```javascript
    typeof obj;	//引用类型全部为object。特例：JS中null被认为是对象的占位符：object - 如果变量是一种引用类型或Null类型
    
-   obj instanceof People;	//引用类型可以明确知道是哪种特定对象。
+   obj instanceof People;	//引用类型可以明确知道是哪种特定对象。无法判断基本类型和null、undefined
+   
+   // Object.prototype.toString.call()最准确最常用的方式，可以封装成工具类
+   Object.prototype.toString.call('').slice(8,-1) === 'String';	//对结果进行截取比较[object String]，结果String、Number、Function、Null、Undefined、Array、Object、Boolean
    ```
 
 2. Function
@@ -285,28 +286,77 @@ ECMAScript  是 JavaScript 标准的规范。
    }
    ```
 
+6. 深浅拷贝
+
+   ```javascript
+   // 1. 浅拷贝 Object.assign()
+   let obj1 = { person: {name: "kobe", age: 41},sports:'basketball' };
+   let obj2 = Object.assign({}, obj1);
    
+   // 2. 浅拷贝 展开运算符...
+   let obj1 = { name: 'Kobe', address:{x:100,y:100}}
+   let obj2= {... obj1}
+   
+   // 3. 浅拷贝 Array对象
+   let arr = [1, 3, {
+       username: ' kobe'
+       }];
+   let arr3 = arr.slice();
+   ```
+
+   ```javascript
+   // 1.深拷贝 JSON.parse(JSON.stringify())：对象转字符串在解析成对象，不过，不能处理函数(null)和正则(空对象)
+   let arr = [1, 3, {
+       username: ' kobe'
+   }];
+   let arr4 = JSON.parse(JSON.stringify(arr));
+   
+   // 2.深拷贝 函数库lodash的_.cloneDeep方法
+   var _ = require('lodash');
+   var obj1 = {
+       a: 1,
+       b: { f: { g: 1 } },
+       c: [1, 2, 3]
+   };
+   var obj2 = _.cloneDeep(obj1);
+   console.log(obj1.b.f === obj2.b.f);// false
+   
+   // 3.深拷贝 jQuery.extend()
+   var $ = require('jquery');
+   var obj1 = {
+       a: 1,
+       b: { f: { g: 1 } },
+       c: [1, 2, 3]
+   };
+   var obj2 = $.extend(true, {}, obj1);
+   console.log(obj1.b.f === obj2.b.f); // false
+   ```
+
 
 ### （七）继承机制
 
 
 
-### （八）ES6（未看）
+### （八）ES6
 
 - let、const代替var
 
 - 变量结构：返回多个值、解析json
 
-- ```javascript
+- 新增Map和Set
+
+  ```javascript
   //初始化对象
   let map = new Map([["age", 18], ["address", "河北省"]]);	//参数需要一个二维数组
   map.set("name", "hang")
-  // 遍历map
+  // for of(由Iterator支持) 适用于：Array、Object、String、Map、Set
+  // for in 适用于: Array、Object、String
+  // forEach 适用于: Set、Map
   for (let [key, value] of map) {
   console.log(key + " is " + value);
   }
   ```
-  
+
 - 箭头函数(一般当参数为函数时使用)：内部没有this会向外层找
 
   > setTimeout(function() {console.log(this);})
@@ -345,8 +395,6 @@ ECMAScript  是 JavaScript 标准的规范。
   }
   ```
 
-  
-
 - 对象增强
 
   ```javascript
@@ -378,7 +426,23 @@ ECMAScript  是 JavaScript 标准的规范。
   }
   ```
 
-  
+- rest参数 add(...numbers)
+
+- 解构赋值
+
+- 模板字符串 `模板字符串示例$(name)`
+
+- class关键字，extends继承（实际同es5修改原型链实现继承一样，只是要清晰）
+
+- Promise解决异步操作问题：回调地狱
+
+  > JavaScript 单线程执行；导致网络请求和浏览器事件都异步，使得页面较短时间内被渲染。
+
+- 模块化：export 和 import
+
+- ES8：async/await基于promise实现：更像同步代码，清晰明了
+
+
 
 ## 二、DOM编程
 

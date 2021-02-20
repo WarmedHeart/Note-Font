@@ -44,3 +44,13 @@ webpack ./src/index.js -o ./build/built.js --mode=development	//webpack会以./s
 
 <a href="问题/webpack命令不能使用.md">webpack命令不能使用原因</a>
 
+# Git使用
+
+插件：`Git History`、`GitLens — Git supercharged`
+
+1. Git History
+   1. 右键文件 选择Git:View File History	查看修改过所选文件的历史版本
+   2. 右键文件 选择Open Change 与最开始版本对比、指定版本对比、和其他分支对比
+
+2. GitLens — Git supercharged
+   1. 光标所在行可以查看修改信息

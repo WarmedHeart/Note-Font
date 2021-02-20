@@ -6,6 +6,7 @@
 
 ```
 	npm -v	//查看版本号
+	npm init //文件生成package.json
 ```
 
 ### （二）cnpm

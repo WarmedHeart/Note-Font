@@ -27,15 +27,37 @@ tsconfig.json
 ```
 
 ```
+tsc demo.ts	//编译单个ts文件
 tsc -w	//监控ts文件变化
 ```
 
+ts模块参考：[深入理解 TypeScript](https://jkchao.github.io/typescript-book-chinese/project/modules.html#%E5%85%A8%E5%B1%80%E6%A8%A1%E5%9D%97)，设置为"module": "commonJS",使用ES模块方式
+
+```typescript
+//CallBack.ts
+export {CallBack}
+```
+
+```js
+//变异成CallBack.js
+exports.CallBack = CallBack;
+```
+
+```js
+//ConcreteSubject.js
+let CallBack = require("./Subject")
+class ConcreteSubject extends CallBack.CallBack {}
+```
+
+
+
 2. 使用：TypeScript会忽略程序中出现的空格、制表符和换行符。常用于缩进代码，便于阅读。<font color="red">面向对象</font>.
-   - 模块
-   - 函数
-   - 变量
-   - 语句和表达式
-   - 注释
+
+- 模块
+- 函数
+- 变量
+- 语句和表达式
+- 注释
 
 循环：
 

@@ -179,15 +179,29 @@ ECMAScript  是 JavaScript 标准的规范。
 3. 对象方法、类方法、原型方法
 
    ```javascript
-   //声明
-   // 1. 函数
+   // 1. 函数声明
    function test() {}	//普通函数
-   // 2. 方法：当一个函数被保存为一个对象的属性时，我们称之为方法
+   // 2. 函数表达式
    var test = function fn(){}	// 函数表达式：匿名函数（拉姆达表达式）,fn()将作为内部变量fn调用
    							// 相当于：var test ={ fn:  function()}
    //函数调用
    test();
+   ```
    
+
+4. 匿名函数自调用
+
+   ```javascript
+   //所需知识: 括弧()里面不能包含 `函数声明` ，所以会将相应代码解析成 `函数表达式`
+   
+   //最外层括弧表示此处代表的是 `函数表达式`
+   (function() {
+   
+   })
+   //可以通过后面跟括弧()，表示函数表达式的执行
+   (function() {
+       
+   })()
    ```
 
    
@@ -821,6 +835,8 @@ var strr = JSON.stringify(obj);	//将js字符串转成json对象
    ```
 
 4. fetch：：对promise封装，**没有使用XMLHttpRequest对象**
+
+5. async和await的使用：[async和await](https://www.jianshu.com/p/b4fd76c61dc9)
 
 ### （十）正则表达式
 

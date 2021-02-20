@@ -1,4 +1,4 @@
-前端规范：缩进2个空格
+​	前端规范：缩进2个空格
 
 MVVM：model + model view + view实现的双向数据绑定；主要依靠View model中Dom Listeners对view的监听，Directives对model中数据改变进而修改dom；模块化
 
@@ -658,7 +658,7 @@ npm install vue-router --save
 
     router/index.js
 
-```
+```vue
 // 
 import VueRouter from 'vue-router'
 import Vue from 'vue'
@@ -666,6 +666,7 @@ import Vue from 'vue'
 // import Home from '../componetns/Home'
 //懒加载组件，最终打包成多个js,客户端路由到哪个就访问哪个js，不向之前全部组件打包成一个js，大型项目最终会很大。
 const Home = () => import('../components/Home')
+const About = () => import('../components/About')
 const HomeNews = () => import('../components/HomeNews')
 //1 通过Vue.use(插件)，安装插件
 Vue.use(VueRouter)
@@ -687,7 +688,12 @@ const routes = [
 				component: HomeNews,
 			}
 		]
-	}
+	},
+    {	
+		//动态路由
+		path: 'about/:userId',
+		component: 'About'
+    }
 ]
 const router = new VueRouter({
 	//配置路由和组件之间的映射关系
@@ -714,11 +720,71 @@ new Vue({
 ```vue
 <template>
 	<div id="app">
-        <router-link to='/home'>首页</router-link>	/最终渲染成a标签
+        <router-link to="/home">首页</router-link>	//最终渲染成a标签
+         <router-link :to="'/about/' + userId">首页</router-link>	//通过this.$route.params.userId获取
        <router-view></router-view>
     </div>    
 </tempalte>
+<script>
+	export default{
+        data() {
+            return {
+                userId: 'zhangsan'
+            }
+        }
+    }    
+</script>
 ```
+
+1. `view-link路由跳转属性:`
+
+```vue
+<router-link to="/home" tag="button" replace active-class="active"/>
+```
+
+```javascript
+
+```
+
+2. 参数传递
+
+```javascript
+//动态参数params：字符串
+{
+	path: 'about/:userId',
+	component: 'About'
+},
+{
+	path: 'home',
+	component: 'Home'
+}
+```
+
+```javascript
+//params字符串参数   
+//about/zhangsan   通过this.$route.params.userId获取
+<router-link :to="'/about/' + userId">首页</router-link>
+
+//query对象参数
+//home?name=hang 通过this.$route.query.name获取
+<router-link :to="{path: '/home', query: {name: 'hang'}}">首页</router-link>
+```
+
+3. router路由跳转
+
+```javascript
+jumpRoute() {
+	this.$router.push('/about' + this.userId);	//push => pushState	可返回
+	this.$router.replace({	//replace => replaceState
+        path: '/home',
+        query: {
+            name: 'hang'
+        }
+    }); 
+}
+```
+
+
 
 #### 四、vue-router内部属性
 

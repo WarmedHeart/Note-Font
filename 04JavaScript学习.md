@@ -189,18 +189,26 @@ ECMAScript  是 JavaScript 标准的规范。
    ```
    
 
-4. 匿名函数自调用
+4. 立即函数自调用：函数是有自己的作用域（相当于在函数私有作用域内声明变量，达到变量隔离的作用）
 
    ```javascript
    //所需知识: 括弧()里面不能包含 `函数声明` ，所以会将相应代码解析成 `函数表达式`
    
    //最外层括弧表示此处代表的是 `函数表达式`
    (function() {
-   
+       
    })
    //可以通过后面跟括弧()，表示函数表达式的执行
    (function() {
        
+   })()
+   
+   //return 函数的返回值，与其他模块进行代码复用、交互
+   var moduleVar = (function() 
+   	return {
+           name: "hang",
+           age: function() {}
+       }
    })()
    ```
 
@@ -848,13 +856,19 @@ console.log(patt.test(val));
 
 # 二、前端模块化
 
-### （一）CommonJS:
+### （一）CommonJS: require、exports对象
 
 同步加载模块，需要使用打包工具将CommonJS特有语法打包（exports、require等），使用browserify进行打包。运行时才能确定模块间依赖关系、输入、输出变量。	
 
 ```javascript
-	model.exports = {};  
-	require("");
+// 总结：node中实现的commonjs模块化思路，实际是浅拷贝(引用拷贝)
+// 每个js文件都有单独的model对象，最终导出只不过是向model.exports指向的堆内存中保存值.
+// bar.js
+model.exports = {};  
+
+// moduleVar指向和model.exports相同的堆内存地址.
+// main.js
+const moduleVar = require("./bar.js");
 ```
 
 ### （二）AMD：
@@ -886,15 +900,29 @@ console.log(patt.test(val));
 
 
 
-### （四）ES6：
+### （四）ES6：import、export关键字
 
 模块静态化，编译时确定模块间依赖关系，以及输入输出的变量。
 
+```javascript
+export {name, age}   //导出的是非对象形式，不是es6对象中key value简写形式，相当于标签，import判断有没有这个标签，没有会报错。
+import {name, age} from "./bar.js"
+import  * as bar from "./bar.js"
+
+export default name	// 一个模块只能导出一个default
+import myName from './bar.js'
+
+import().then(res=> {
+    res.name;
+}) //以上是关键字，此处属于import函数，返回Promise对象，异步加载。
 ```
-	export 关键字，导出的是非对象形式，不是es6对象中key value简写形式，相当于标签，import判断有没有这个标签，没有会报错。
-	import 关键字
-	import() 函数，返回Promise对象，实现异步加载。
+
+```javascript
+// ES Module默认使用严格模式：use strict (模块加载js时不允许通过协议file：读取文件，需用到live serve模拟小型服务器)
+<script src="./bar.js" type="module"></script>
 ```
+
+
 
 CommonJS 和ES6区别：
 

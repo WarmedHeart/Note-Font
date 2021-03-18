@@ -381,7 +381,7 @@ ECMAScript  是 JavaScript 标准的规范。
   }
   ```
 
-- 箭头函数(一般当参数为函数时使用)：内部没有this会向外层找
+- 箭头函数(一般当参数为函数时使用)：箭头函数内部没有this，内部没有this会向外层找
 
   > setTimeout(function() {console.log(this);})
   >

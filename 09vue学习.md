@@ -1,4 +1,4 @@
-​	前端规范：缩进2个空格
+	前端规范：缩进2个空格
 
 MVVM：model + model view + view实现的双向数据绑定；主要依靠View model中Dom Listeners对view的监听，Directives对model中数据改变进而修改dom；模块化
 
@@ -792,3 +792,166 @@ jumpRoute() {
 
 1. this.$router：即index.js中创建的router属性，在所有组件data()内部默认都存在，**push()、replace()**效果相当于~~hsitory.pushState()、history.replaceState()~~，history的方法会绕过vue-router。beforeEach()进行跳转拦截
 2. this.$route：处于活跃路由的组件。.params、.query获取访问该组件时传入的参数。
+
+#### 五、项目遇到的问题
+
+（一）、**生命周期中包含有异步请求（阻塞、不阻塞）**
+
+1. 钩子函数（8大生命周期）
+     	1. beforeCreate
+      2. created：**$data、data中的数据、methods中的方法已创建完成**
+      3. beforeMount
+      4. mounted：**$el创建完成并替换了DOM元素**
+      5. beforeUpdate
+      6. updated：**data中数据发生改变，会触发对应组件的重新渲染（beforeUpdate和updated没看出区别）**
+      7. beforeDestroy：**销毁前、实例可用**
+      8. destroyed：**vue实例销毁**
+
+2. 问题描述：
+
+   当钩子函数中有异步请求（即使阻塞），不会妨碍下一阶段钩子函数的执行
+
+   ```js
+   async created() {
+   	console.log("created-----into");
+   	await res = await this.$axios.get("./getData/country.json");
+   	console.log(res);
+   	console.log("created-----out");
+   },
+   mounted() {
+   	console.log("mounted-----into");
+   }
+   // 正常逻辑：created执行完，再执行mounted，可是，执行方式有差异！！！
+   // created-----into
+   // mounted-----into
+   // data
+   // created-----out
+   ```
+
+3. 问题解决：
+
+   再使用该模块**添加v-if = “flag”标识**。初始为否，异步数据获取到再设置为真。
+
+   <span style="color: red">父子组件的 created 是顺次执行的：先父后子。</span>
+
+   ```html
+   <template>
+   	<div>
+           <!-- 当leftDataFlag为false时该template不会被加载 -->
+   		<left-table v-if="leftDataFlag" :data="data"/>
+   	</div>
+   </template>
+   
+   <script>
+   export default {
+   	data() {
+           return {
+               leftDataFlag: false,
+               data: {}
+           }
+       }
+   	created() {
+           getRestData(param).then(resp => {
+               this.data = JSON.parse(resp);
+               this.leftDataFlag = true;
+           })
+       }
+   }
+   </script>
+   ```
+
+4. 参考文章
+
+   [Vue created 中的异步请求的影响分析](https://blog.csdn.net/wojiushiwo945you/article/details/107539344)
+
+（二）、**子组件v-if=“false”，父组件无法调用子组件的方法**
+
+ 1. 尽可能避免的写法
+
+    ```html
+    // 父组件 (这样写模态框会被记载到父组件中)
+    <a-modal title="用户信息完善" v-model="showModal" width="35%">
+       <user-info-complete ref="infoModal" v-if="showUserInfo"></user-info-complete>
+    </a-modal>
+    
+    // 请求该方法：this,$refs.infoModal.selectData(); 
+    // 当showUserInfo为false时： 调用子组件的方法，是获取不到的，父组件中不存在该dom。
+    // 当showUserInfo为true时: 才能调用子组件的方法。
+    ```
+
+    ```html
+    // 子组件
+    <template>
+      // 内容
+    </template>
+    
+    <script>
+    export default {
+    	methods:{
+    		selectData() {
+    			this.showModal = true;
+                // 获取弹出框所需数据
+                // ...
+    		}
+    	}
+    }
+    </script>
+    ```
+
+ 2. 推荐的写法（将弹出框写在组件中）
+
+    ```html
+    // 父组件 (这样写模态框会被记载到父组件中)
+    <template>
+       <user-info-complete ref="infoModal"></user-info-complete>
+    </template>
+    
+    // this,$refs.infoModal.selectData(); 调用子组件的方法，使模态框显示
+    ```
+
+    ```html
+    // 子组件
+    <template>
+      <a-modal title="用户信息完善" v-model="showModal" width="35%">
+      	//...
+      </a-modal>
+    </template>
+    
+    <script>
+    export default {
+    	data() {
+            return {
+                showModal: false
+            }
+        }
+    	methods:{
+    		selectData() {
+    			this.showModal = true;
+                // 获取弹出框所需数据
+                // ...
+    		}
+    	}
+    }
+    </script>
+    ```
+
+ 3. 总结：
+
+    **v-show使用display:none实现，会存在于dom树中。**
+
+    ```html
+    <h3 v-show="showModal">专项类型</h3>
+    ```
+
+    ![image-20210329200731760](C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210329200731760.png)
+
+    **v-if 为false时直接从dom中去除**。
+
+    ```
+    <h3 v-if="showModal">专项类型</h3>
+    ```
+
+    <img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210329195721465.png" alt="image-20210329195721465 " style="float: left;margin-top:20px" /> 
+
+<img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210329195852873.png" alt="image-20210329195852873" title=" style=&quot; " style="float: left; margin-left: 20px" /> 
+

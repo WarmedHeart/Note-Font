@@ -18,6 +18,8 @@ ECMAScript  是 JavaScript 标准的规范。
 
 ### （二）变量类型
 
+所有的数据结构都是对象，最终的原型链都会指向Object（方法是prototype，对象是__ proto __）
+
 **值类型(基本类型)**：字符串（String）、数字(Number)、布尔(Boolean)、对空（Null）、未定义（Undefined）
 
 **引用数据类型**：对象(Object)、数组(Array)、函数(Function)

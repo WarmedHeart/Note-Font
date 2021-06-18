@@ -14,30 +14,28 @@ vue init webpack 01-runtime-only	//runtime-only
 
 ### 2）构建项目时会让选择：Runtime Only 版本的还是 Runtime + Compiler 版本
 
-### ![image-20210615110649207](C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615110649207.png)
+![image-20210615110649207](.\asset\01-runtime-only和runtime-compiler区别_img\image-20210615110649207.png)
 
 ### 3）项目对比（左侧runtime-only，右侧runtime-compiler）
 
 #### 1. package.json完全相同，此处注意 **vue-template-compiler**，会将.vue编译成JavaScript生成render函数
 
-<div><img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615111219483.png" alt="image-20210615111219483" style="zoom:80%;" /></div>
+<div><img src=".\asset\01-runtime-only和runtime-compiler区别_img\image-20210615111219483.png" style="zoom:80%;" /></div>
 
 #### 2. App.vue完全相同
 
-<div><img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615111728362.png" alt="image-20210615111728362" style="zoom:80%;" /></div>
+<div><img src="asset/01-runtime-only和runtime-compiler区别_img/image-20210615111728362.png" style="zoom:80%;" /></div>
 
 #### 3. main.js，使用Vue构造函数初始化时参数：render和template的区别
 
-<div><img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615111919552.png" alt="image-20210615111919552" style="zoom:80%;" /></div>
+<div><img src="asset/01-runtime-only和runtime-compiler区别_img/image-20210615111919552.png" style="zoom:80%;" /></div>
 
 #### 4. webpack.base.config.js对 ***import Vue from ‘vue’*** 引入的不同（详细代码会在后面代码解析部分说明）
 
 1. runtime-compiler对vue引入别名，最终指向：**<span style="color: red">node_modules/vue/dist/vue.esm.js</span>**
 2. runtime-only未对vue起别名，最终指向：node_modules/vue/package.js 文件中main: **<span style="color: red">dist/vue.runtime.common.js</span>**（文件引入规则，参考10node.md）
 
-<div><img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615122535221.png" alt="image-20210615122535221" style="zoom:80%;" /></div>
-
-
+<div><img src="asset/01-runtime-only和runtime-compiler区别_img/image-20210615122535221.png" style="zoom:80%;" /></div>
 
 ## 二、加载过程
 
@@ -49,14 +47,13 @@ vue init webpack 01-runtime-only	//runtime-only
 
  1. vue-loader结合vue-complete-compiler：.vue -> ast -> render（该阶段在代码编译阶段，将.vue文件加载后最终生成render（）函数）
 
-    - vue-complete-compiler是从vue源码 src/complier中抽取出来的一部分。[参考：vue-loader&vue-template-compiler详解](https://blog.csdn.net/ligang2585116/article/details/104576582)
-
-    - 通过 **import App from './App'**引入的.vue会直接转成带有render()函数的对象。
-
-    <div>
-        <img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615154425199.png" alt="image-20210615154425199" style="" />
+    - vue-complete-compiler是从vue源码 src/complier和src/sfc中抽取出来的一部分，用作.vue解析成JS对象，生成AST、生成render函数。[参考：vue-loader&vue-template-compiler详解](https://blog.csdn.net/ligang2585116/article/details/104576582)
+- 通过 **import App from './App'**引入的.vue会直接转成带有render()函数的对象。
+    
+<div>
+        <img src="asset/01-runtime-only和runtime-compiler区别_img/image-20210615154425199.png" style="" />
     </div>
-
+    
 2. runtime-only: render -> vnode -> 页面
 
 ## 三、代码解析
@@ -65,13 +62,14 @@ vue init webpack 01-runtime-only	//runtime-only
 
 runtime-comiler在原$mount方法基础上，增加了解析tempalte生成render()函数
 
-![image-20210615160422954](C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615160422954.png)
+![image-20210615160422954](asset/01-runtime-only和runtime-compiler区别_img/image-20210615160422954.png)
 
 拓展功能：
 
 <div>
-    <img src="C:\Users\25681\AppData\Roaming\Typora\typora-user-images\image-20210615160929019.png" alt="image-20210615160929019" style="" />
+    <img src="asset/01-runtime-only和runtime-compiler区别_img/image-20210615160929019.png" alt="image-20210615160929019" style="" />
 </div>
+
 
 ### 四、总结
 

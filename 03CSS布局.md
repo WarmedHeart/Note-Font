@@ -33,13 +33,13 @@ body {
 ​	auto是 <span style="color: red"> **非包裹性的块级元素** </span> 在<span style="color: red"> **宽度** </span> 相对父元素的默认值 *（块级元素的margin、border、padding以及content宽度之和等于父元素width）*，由浏览器自动计算。
 
   		1.  自适应屏幕宽度 width: auto;	
-                		2.  相对父元素水平居中 margin: 0 auto;	
+  	            		2.  相对父元素水平居中 margin: 0 auto;	
 
 
 
 <span style="color: red"> **当div具有包裹性，就不能使用auto来适应父级宽度。**</span>
 
-​	margin: 0 auto; 没有生效的原因：(1)没有为该元素设置宽度，也就没有办法参考父元素的宽度来进行自身margin的auto。(2)div具有包裹性，即脱离标准流。没有可供参考的父元素宽度进行自身margin的auto。
+​	margin: 0 auto; 没有生效的原因：(1)没有为该元素设置宽度，也就没有办法参考父元素的宽度来进行自身margin的auto。(2)当div具有包裹性，比如脱离标准流，就没有可供参考的父元素宽度进行自身margin的auto。
 
 问题：那为什么margin：auto对不能计算垂直方向的值呢？
 
@@ -143,24 +143,19 @@ body {
 
 以下是float元素，可以看出文字是围绕浮动元素的，而背景色却在浮动层下方。
 
+<div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); float:left"></div>
+<div style="width:200px; height: 200px; background-color: blue;">
+  最近还好1！最近还好2！最近还好3！最近还好4！
+  最近还好5！最近还好6！最近还好7！最近还好8！
+</div>
 
-
-```html
-    <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); float:left"></div>
-    <div style="width:200px; height: 200px; background-color: blue;">
-        最近还好1！最近还好2！最近还好3！最近还好4！
-        最近还好5！最近还好6！最近还好7！最近还好8！
-    </div>
-```
 以下是absoult，不会影响其他元素任何布局。
 
-```html
-    <div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); position:absolute"></div>
-    <div style="width:200px; height: 200px; background-color: blue;">
-        最近还好1！最近还好2！最近还好3！最近还好4！
-        最近还好5！最近还好6！最近还好7！最近还好8！
-    </div>	
-```
+<div style="width:100px; height: 100px; background-color: rgba(235, 20, 20, 0.3); position:absolute"></div>
+<div style="width:200px; height: 200px; background-color: blue;">
+  最近还好1！最近还好2！最近还好3！最近还好4！
+  最近还好5！最近还好6！最近还好7！最近还好8！
+</div>	
 
 **使用float实现圣杯布局、双飞翼布局：两者都是先加载中间部分，额外引入<div>标签，其目的是为了既能使中间产生浮动，又能使中间自适应屏幕宽度（浮动后属于包裹元素，不能width:auto自适应宽度），为两侧预留空间。**
 
@@ -275,7 +270,7 @@ body {
     height: 100%;
     margin-left: -150px;
     background: blue;
-  }
+  } 
 ```
 
 ### （二）inline-block文本流
@@ -378,10 +373,18 @@ body {
 
 2.当`position`为`static/relative`时，元素依旧处于普通流中，再对元素应用`float`起作用。
 
-
-
 ### 布局实例
 
 [css布局练习总结]: https://www.jianshu.com/p/6c41d9068b73
 
 ![2016-01-07_223349](CSS布局_img/933778-20160422152626398-306602587.png)
+
+## 三、BFC
+
+[MDN BFC介绍]: https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context
+
+解决问题：
+
+ 	1. 内部浮动元素，导致父元素高度坍塌；
+ 	2. 垂直方向margin合并；
+
